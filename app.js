@@ -1,5 +1,7 @@
 const yargs = require('yargs');
 
+const cliente = require('./clientes');
+
 // Create addCliente command
 yargs.command({
     command: 'addCliente',
@@ -16,23 +18,39 @@ yargs.command({
             type: 'string'
         },
         telefone: {
-            describe: 'Nome do Cliente',
+            describe: 'Telefone do Cliente',
             demandOption: true,
             type: 'string'
         },
         email: {
-            describe: 'Nome do Cliente',
+            describe: 'Email do Cliente',
             demandOption: true,
             type: 'string'
         },
         nascimento: {
+            describe: 'Data de nascimento do Cliente',
+            demandOption: true,
+            type: 'string'
+        },
+    },
+    handler(argv) {
+        cliente.addCliente(argv.nome, argv.endereco, argv.telefone, argv.email, argv.nascimento);
+    }
+});
+
+//Create cliente command para buscar clientes
+yargs.command({
+    command: 'cliente',
+    describe: 'Busca o cliente pelo nome',
+    builder: {
+        nome: {
             describe: 'Nome do Cliente',
             demandOption: true,
             type: 'string'
         },
     },
     handler(argv) {
-
+        cliente.procurarCliente(argv.nome);
     }
 });
 
@@ -41,37 +59,53 @@ yargs.command({
     command: 'addConsulta',
     describe: 'Adiciona o registro de uma nova consulta',
     builder: {
-        cliente: {
+        nome: {
             describe: 'Nome do Cliente',
             demandOption: true,
             type: 'string'
         },
         data: {
-            describe: 'Nome do Cliente',
+            describe: 'Data da consulta',
             demandOption: true,
             type: 'string'
         },
         horario: {
-            describe: 'Endereço do cliente',
+            describe: 'Horário da consulta',
             demandOption: true,
             type: 'string'
         },
         peso: {
-            describe: 'Nome do Cliente',
+            describe: 'Peso do Cliente',
             demandOption: true,
             type: 'string'
         },
-        percentualGordura: {
-            describe: 'Nome do Cliente',
+        gordura: {
+            describe: 'Percentual de gordura do Cliente',
             demandOption: true,
             type: 'string'
         },
         sensacao: {
-            describe: 'Nome do Cliente',
+            describe: 'Sensação física do Cliente',
             demandOption: true,
             type: 'string'
         },
         restricoes: {
+            describe: 'Restrições',
+            demandOption: true,
+            type: 'string'
+        },
+    },
+    handler(argv) {
+
+    }
+});
+
+// Create consulta command para buscar consultas
+yargs.command({
+    command: 'consulta',
+    describe: 'Busca as consultas referentes a um cliente',
+    builder: {
+        nome: {
             describe: 'Nome do Cliente',
             demandOption: true,
             type: 'string'
@@ -82,6 +116,4 @@ yargs.command({
     }
 });
 
-//Create cliente command para buscar clientes
-// Create consulta command para buscar consultas
 //Create grupo de alimentos
