@@ -52,4 +52,10 @@ const clienteSchema = new mongoose.Schema({
     },
 });
 
+clienteSchema.virtual('consulta', {
+    ref: 'Consulta',
+    localField: '_id',
+    foreignField: 'cliente',
+});
+
 module.exports.Cliente = mongoose.model('Cliente', clienteSchema);
