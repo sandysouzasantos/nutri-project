@@ -7,29 +7,7 @@ const clienteSchema = new mongoose.Schema({
         minlength: 3,
         maxlength: 50,
     },
-    rua: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 50,
-    },
-    numero: {
-        type: Number,
-        required: true,
-    },
-    bairro: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 50,
-    },
-    cidade: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 50,
-    },
-    estado: {
+    endereco: {
         type: String,
         required: true,
         minlength: 3,

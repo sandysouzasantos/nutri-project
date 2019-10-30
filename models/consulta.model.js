@@ -22,7 +22,7 @@ const consultaSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    sensacaoFísica: {
+    sensacaoFisica: {
         type: String,
         required: true,
         minlength: 3,
