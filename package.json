@@ -12,7 +12,8 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "mongoose": "^5.7.7",
-    "yargs": "^14.2.0"
+    "yargs": "^14.2.0",
+    "yargs-interactive": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"

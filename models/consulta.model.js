@@ -24,13 +24,11 @@ const consultaSchema = new mongoose.Schema({
     },
     sensacaoFisica: {
         type: String,
-        required: true,
         minlength: 3,
         maxlength: 50,
     },
     restricoes: {
         type: String,
-        required: true,
         minlength: 3,
         maxlength: 50,
     },
