@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const yargsInteractive = require('yargs-interactive');
 
-const Cliente = require('./models/cliente.model');
+const {Cliente} = require('./models/cliente.model');
 
 const clienteInfo = {
     interactive: {default: true},
@@ -27,35 +27,52 @@ const clienteInfo = {
     },
 };
 
+const procurarCliente = (nome) => {
+    Cliente
+        .findOne({nome: nome})
+        .then(
+            (cliente) => {
+                if (cliente) {
+                    console.log(cliente);
+                } else {
+                    console.log(chalk.red.inverse('Cliente não encontrado'));
+                }
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+};
+
 const addCliente = () => {
     yargsInteractive()
         .usage("$0 <command> [args]")
         .interactive(clienteInfo)
         .then(result => {
-            console.log(result);
+            Cliente
+                .findOne({nome: result.nome})
+                .then(
+                    (cliente) => {
+                        if (!cliente) {
+                            const novoCliente = new Cliente({
+                                nome: result.nome,
+                                endereco: result.endereco,
+                                telefone: result.telefone,
+                                email: result.email,
+                                nascimento: result.nascimento
+                            });
+                            novoCliente.save();
+                            console.log(chalk.green.inverse('Novo cliente cadastrado'));
+                            return console.log(novoCliente);
+                        } else {
+                            return console.log(chalk.red.inverse('Este cliente já está cadastrado.'));
+                        }
+                    },
+                    (err) => {
+                        console.log(err);
+                    }
+                );
         });
-};
-/*const addCliente = (nome, endereco, telefone, email, nascimento) => {
-    console.log(nome, endereco, telefone, email, nascimento);
-    const cliente = Cliente.findOne({nome});
-
-    if(!cliente){
-        const novoCliente = new Cliente({nome, endereco, telefone, email, nascimento});
-        novoCliente.save();
-        return console.log(novoCliente);
-    } else {
-        return console.log(chalk.red.inverse('Já existe um cliente com este nome.'));
-    }
-};*/
-
-const procurarCliente = async (nome) => {
-    const cliente = await Cliente.findOne({nome});
-
-    if (cliente) {
-        console.log(cliente);
-    } else {
-        console.log(chalk.red.inverse('Não existe nenhum cliente com o nome pesquisado'));
-    }
 };
 
 module.exports = {

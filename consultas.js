@@ -1,10 +1,9 @@
 const chalk = require('chalk');
 
-const Consulta = require('./models/consulta.model');
-const Cliente = require('./models/cliente.model');
+const {Consulta} = require('./models/consulta.model');
+const {Cliente} = require('./models/cliente.model');
 
 const yargsInteractive = require('yargs-interactive');
-
 
 const consultaInfo = {
     interactive: {default: true},
@@ -24,7 +23,7 @@ const consultaInfo = {
         type: 'input',
         describe: 'Peso do Cliente: '
     },
-    gordura: {
+    percentualGordura: {
         type: 'input',
         describe: 'Percentual de gordura do Cliente: '
     },
@@ -44,32 +43,58 @@ const addConsulta = () => {
         .usage("$0 <command> [args]")
         .interactive(consultaInfo)
         .then(result => {
-            console.log(result);
+            Cliente
+                .findOne({nome: result.nome})
+                .then(
+                    (cliente) => {
+                        if(!cliente) {
+                            return console.log(chalk.red.inverse('Cliente não encontrado.'));
+                        }
+
+                        const consulta = new Consulta({
+                            cliente: cliente._id,
+                            data: result.data,
+                            horario: result.horario,
+                            peso: result.peso,
+                            percentualGordura: result.percentualGordura,
+                            sensacaoFisica: result.sensacao,
+                            restricoes: result.restricoes
+                        });
+                        consulta.save();
+                        return console.log(consulta);
+                    },
+                    (err) => {
+                        return console.log(err);
+                    }
+                );
         });
 };
 
-/*const addConsulta = async (nome, data, horario, peso, gordura, sensacaoFisica, restricoes) => {
-    const cliente = await Cliente.find({nome});
+const procurarConsultas = (nome) => {
+    Cliente
+        .findOne({nome: nome})
+        .then(
+            (cliente) => {
+                if (!cliente) {
+                    return console.log(chalk.red.inverse('Cliente não encontrado.'));
+                }
 
-    if(!cliente) {
-        return console.log(chalk.red.inverse('Cliente não encontrado.'));
-    }
-
-    const consulta = new Consulta({cliente: cliente._id, data, horario, peso, gordura, sensacaoFisica, restricoes});
-    await consulta.save();
-    console.log(consulta);
-};*/
-
-const procurarConsultas = async (nome) => {
-    const cliente = await Cliente.find({nome});
-
-    if (!cliente) {
-        return console.log(chalk.red.inverse('Cliente não encontrado.'));
-    }
-
-    const consultas = await Consulta.findMany({cliente: nome});
-
-    console.log(consultas);
+                Consulta
+                    .find({cliente: cliente._id})
+                    .then(
+                        (consultas) => {
+                            if(consultas.length > 0){
+                                return console.log(consultas);
+                            } else {
+                                return console.log(chalk.red.inverse('Ainda não há consultas para esse cliente'));
+                            }
+                        }
+                    );
+            },
+            (err) => {
+                return console.log(err);
+            }
+        );
 };
 
 module.exports = {
